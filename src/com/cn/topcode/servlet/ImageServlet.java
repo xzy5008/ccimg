@@ -38,8 +38,8 @@ public class ImageServlet extends HttpServlet{
 		resp.setCharacterEncoding("UTF-8");
 		String uri = req.getRequestURI();
 		String p = uri.substring(uri.lastIndexOf("/")+1,uri.length());
-		String imgPath = req.getSession().getServletContext().getRealPath("/upload")+ "/ccImg/";//图片路径
-		
+//		String imgPath = req.getSession().getServletContext().getRealPath("/upload")+ "/ccImg/";//图片路径
+		String imgPath = Config.FILE_PATH;
 		try {
 			if(!StringUtil.isNull(p)){
 				p = DesUtils.decrypt(p); //解密
