@@ -48,9 +48,10 @@ public class QueryServlet extends HttpServlet {
 				String configPwd = MD5Util.getMD5SecretKey(MD5Util.KEY_PREFIX
 						+ ccid + time + MD5Util.KEY_SUFFIX);
 				if (pwd.equals(configPwd)) {
-					String imgPath = req.getSession().getServletContext()
-							.getRealPath("/upload")
-							+ "/ccImg/";
+//					String imgPath = req.getSession().getServletContext()
+//							.getRealPath("/upload")
+//							+ "/ccImg/";
+					String imgPath = Config.FILE_PATH;
 					//查询图片是否存在
 					File file = new File(imgPath + ccid + ".png");
 					if (!file.exists()) {
