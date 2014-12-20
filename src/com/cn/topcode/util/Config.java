@@ -2,6 +2,7 @@ package com.cn.topcode.util;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
 
@@ -21,6 +22,10 @@ public class Config implements Serializable{
 	public static String IMAGE_URL;
 	public static String VALID_TIME;
 	public static String FILE_PATH;
+	public static Integer ID_LEN;
+	
+	public static Map<String, String> TYPE_LENS;
+	
 	/**
 	 *加载配置文件
 	 */
@@ -45,6 +50,8 @@ public class Config implements Serializable{
 		IMAGE_URL=resourceBundle.getString("image_url");
 		VALID_TIME=resourceBundle.getString("valid_time");
 		FILE_PATH=resourceBundle.getString("file_path");
+		ID_LEN=Integer.parseInt(resourceBundle.getString("id_len"));
+		TYPE_LENS=splitStatus(resourceBundle.getString("type_lens"));
 		
 		
 		

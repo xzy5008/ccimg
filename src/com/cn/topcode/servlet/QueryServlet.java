@@ -51,9 +51,18 @@ public class QueryServlet extends HttpServlet {
 //					String imgPath = req.getSession().getServletContext()
 //							.getRealPath("/upload")
 //							+ "/ccImg/";
-					String imgPath = Config.FILE_PATH;
+					
+					//路径拼接
+					StringBuffer sb = new StringBuffer(Config.FILE_PATH);//图片存放根目录
+					
+					sb.append("/").append(Config.TYPE_LENS.get(ccid.length()+""));//图片类别目录 55,58等
+					
+					sb.append("/").append(ccid.subSequence(0, ccid.length()-Config.ID_LEN));//彩码ID路径
+					
+					sb.append("/").append(ccid).append(".png");//ID
+					
 					//查询图片是否存在
-					File file = new File(imgPath + ccid + ".png");
+					File file = new File(sb.toString());
 					if (!file.exists()) {
 						rs = "0003";// 图片不存在
 					} else {
@@ -94,4 +103,5 @@ public class QueryServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doPost(req, resp);
 	}
+	
 }
