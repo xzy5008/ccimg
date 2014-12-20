@@ -39,22 +39,33 @@ public class ImageServlet extends HttpServlet{
 		String uri = req.getRequestURI();
 		String p = uri.substring(uri.lastIndexOf("/")+1,uri.length());
 //		String imgPath = req.getSession().getServletContext().getRealPath("/upload")+ "/ccImg/";//图片路径
-		String imgPath = Config.FILE_PATH;
+		
+		//路径拼接
+		StringBuffer sb = new StringBuffer(Config.FILE_PATH);//图片存放根目录
+		
+		
 		try {
 			if(!StringUtil.isNull(p)){
 				p = DesUtils.decrypt(p); //解密
 				String[] arr = p.split(",");
+				String ccid = arr[1];
+				
+				sb.append("/").append(Config.TYPE_LENS.get(ccid.length()+""));//图片类别目录 55,58等
+				sb.append("/").append(ccid.subSequence(0, ccid.length()-Config.ID_LEN));//彩码ID路径
+				sb.append("/").append(ccid).append(".png");//ID
+				
 				if("DISPLE".equals(arr[0])){
-					File file = new File(imgPath + arr[1] + ".png");
+					
+					File file = new File(sb.toString());
 					if (file.exists()) {
-						outImg(resp, imgPath + arr[1] + ".png");
+						outImg(resp, sb.toString());
 					} 
 				}else{
 					if(DateUtil.addMINUTE(DateUtil.string2Date(arr[0],"yyyyMMddHHmmssSSSS"), 
 							Integer.parseInt(Config.VALID_TIME)).getTime()> (new Date()).getTime()){
-						File file = new File(imgPath + arr[1] + ".png");
+						File file = new File(sb.toString());
 						if (file.exists()) {
-							outImg(resp, imgPath + arr[1] + ".png");
+							outImg(resp, sb.toString());
 						} 
 					}
 				}
@@ -87,7 +98,7 @@ public class ImageServlet extends HttpServlet{
 			is.close();
 			out.close();
 		} catch (Exception e) {
-//			e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	
