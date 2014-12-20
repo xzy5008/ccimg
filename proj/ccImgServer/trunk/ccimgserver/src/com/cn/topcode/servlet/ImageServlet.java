@@ -50,7 +50,7 @@ public class ImageServlet extends HttpServlet{
 				String[] arr = p.split(",");
 				String ccid = arr[1];
 				
-				sb.append("/").append(Config.TYPE_LENS.get(ccid.length()+""));//图片类别目录 55,58等
+				sb.append("/").append(ccid.length());//图片类别目录 11,18等
 				sb.append("/").append(ccid.subSequence(0, ccid.length()-Config.ID_LEN));//彩码ID路径
 				sb.append("/").append(ccid).append(".png");//ID
 				

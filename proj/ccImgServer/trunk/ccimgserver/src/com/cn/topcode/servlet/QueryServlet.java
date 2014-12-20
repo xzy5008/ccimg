@@ -55,7 +55,7 @@ public class QueryServlet extends HttpServlet {
 					//路径拼接
 					StringBuffer sb = new StringBuffer(Config.FILE_PATH);//图片存放根目录
 					
-					sb.append("/").append(Config.TYPE_LENS.get(ccid.length()+""));//图片类别目录 55,58等
+					sb.append("/").append(ccid.length());//图片类别目录11,18等
 					
 					sb.append("/").append(ccid.subSequence(0, ccid.length()-Config.ID_LEN));//彩码ID路径
 					
