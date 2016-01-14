@@ -38,10 +38,9 @@ public class ImageServlet extends HttpServlet{
 		resp.setCharacterEncoding("UTF-8");
 		String uri = req.getRequestURI();
 		String p = uri.substring(uri.lastIndexOf("/")+1,uri.length());
-//		String imgPath = req.getSession().getServletContext().getRealPath("/upload")+ "/ccImg/";//图片路径
 		
 		//路径拼接
-		StringBuffer sb = new StringBuffer(Config.FILE_PATH);//图片存放根目录
+		StringBuffer sb = new StringBuffer(Config.MAKE_IMGPATH);//图片存放根目录
 		
 		
 		try {
@@ -50,8 +49,6 @@ public class ImageServlet extends HttpServlet{
 				String[] arr = p.split(",");
 				String ccid = arr[1];
 				
-				sb.append("/").append(ccid.length());//图片类别目录 11,18等
-				sb.append("/").append(ccid.subSequence(0, ccid.length()-Config.ID_LEN));//彩码ID路径
 				sb.append("/").append(ccid).append(".png");//ID
 				
 				if("DISPLE".equals(arr[0])){

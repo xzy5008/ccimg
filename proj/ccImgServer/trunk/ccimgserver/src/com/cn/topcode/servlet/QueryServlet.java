@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.cn.topcode.shell.MakeService;
 import com.cn.topcode.util.Config;
 import com.cn.topcode.util.DesUtils;
 import com.cn.topcode.util.DateUtil;
@@ -48,35 +49,31 @@ public class QueryServlet extends HttpServlet {
 				String configPwd = MD5Util.getMD5SecretKey(MD5Util.KEY_PREFIX
 						+ ccid + time + MD5Util.KEY_SUFFIX);
 				if (pwd.equals(configPwd)) {
-//					String imgPath = req.getSession().getServletContext()
-//							.getRealPath("/upload")
-//							+ "/ccImg/";
-					
-					//路径拼接
-					StringBuffer sb = new StringBuffer(Config.FILE_PATH);//图片存放根目录
-					
-					sb.append("/").append(ccid.length());//图片类别目录11,18等
-					
-					sb.append("/").append(ccid.subSequence(0, ccid.length()-Config.ID_LEN));//彩码ID路径
-					
-					sb.append("/").append(ccid).append(".png");//ID
-					
-					//查询图片是否存在
-					File file = new File(sb.toString());
-					if (!file.exists()) {
-						rs = "0003";// 图片不存在
-					} else {
+//					
 
-						String sign = null;// 无时间限制
-						if ("sign".equals(req.getParameter("sign"))) {
-							sign = "DISPLE";
+					if(!StringUtil.isNull(ccid) && (ccid.length() == 11 || ccid.length() == 18)) {
+						String sb = MakeService.makeImg(ccid);
+						
+						//查询图片是否存在
+						File file = new File(sb.toString());
+						if (!file.exists()) {
+							rs = "0003";// 图片不存在
 						} else {
-							sign = DateUtil.date2String(new Date(),
-									"yyyyMMddHHmmssSSSS");
+							
+							String sign = null;// 无时间限制
+							if ("sign".equals(req.getParameter("sign"))) {
+								sign = "DISPLE";
+							} else {
+								sign = DateUtil.date2String(new Date(),
+										"yyyyMMddHHmmssSSSS");
+							}
+							rs = Config.IMAGE_URL + DesUtils.encrypt(sign + "," + ccid);
+							
 						}
-						rs = Config.IMAGE_URL + DesUtils.encrypt(sign + "," + ccid);
-
+					}else{
+						rs = "0003";// 图片不存在
 					}
+					
 				} else {
 					rs = "0002";// 验证失败
 				}
