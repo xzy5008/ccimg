@@ -43,6 +43,19 @@ public class StringUtil {
 		}
 		return isNull;
 	}
+	/**
+	 * 判断字符串是否为空.
+	 * 
+	 * @param str
+	 * @return
+	 */
+	public static boolean isNotNull(String str) {
+		boolean isNull = false;
+		if (str != null && !"".equals(str.trim()) && !"null".equals(str)) {
+			isNull = true;
+		}
+		return isNull;
+	}
 
 	/**
 	 * *随机生成通用唯一标识符.

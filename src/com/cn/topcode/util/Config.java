@@ -1,10 +1,14 @@
 package com.cn.topcode.util;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.StringTokenizer;
+
+import com.mongodb.ServerAddress;
 
 /**
  * @version 1.0
@@ -15,9 +19,7 @@ public class Config implements Serializable{
 	 * 配置文件名称
 	 */
 	static final String propfilename = "config";
-	static{
-		 new Config();
-	}
+
 	
 	public static String IMAGE_URL;
 	public static String VALID_TIME;
@@ -26,6 +28,21 @@ public class Config implements Serializable{
 	
 	public static Map<String, String> TYPE_LENS;
 	
+	
+	public static  List<ServerAddress> MONGODB_HOSTS = new ArrayList<ServerAddress>();
+	public static  String MONGODB_DBNAME;
+	public static  String MONGODB_USER;
+	public static  String MONGODB_PASSWORD;
+	
+	
+	//图片服务器 信息
+	public static String MAKE_SHELL;
+	public static String MAKE_IMGPATH;
+	public static String MAKE_SDK;
+	
+	static{
+		 new Config();
+	}
 	/**
 	 *加载配置文件
 	 */
@@ -51,9 +68,42 @@ public class Config implements Serializable{
 		VALID_TIME=resourceBundle.getString("valid_time");
 		FILE_PATH=resourceBundle.getString("file_path");
 		ID_LEN=Integer.parseInt(resourceBundle.getString("id_len"));
+		
+		
 		TYPE_LENS=splitStatus(resourceBundle.getString("type_lens"));
 		
-		
+		replSeeds(resourceBundle.getString("mongodb_hosts"));
+		MONGODB_DBNAME = resourceBundle.getString("mongodb_dbname");
+		MONGODB_USER = resourceBundle.getString("mongodb_user");
+		MONGODB_PASSWORD = resourceBundle.getString("mongodb_password");
+	
+		//图片服务器 信息
+		MAKE_SHELL=resourceBundle.getString("MAKE_SHELL");
+		MAKE_IMGPATH=resourceBundle.getString("MAKE_IMGPATH");
+		MAKE_SDK=resourceBundle.getString("MAKE_SDK");
+	}
+	
+	private void  replSeeds(String hosts) {
+		String[] serverAddresses = hosts.split(",");
+		ServerAddress address = null;
+		try {
+			for (String addr : serverAddresses) {
+				String[] a = addr.split(":");
+				String host = a[0];
+				if (a.length > 2) {
+					throw new IllegalArgumentException(
+							"Invalid Server Address : " + addr);
+				} else if (a.length == 2) {
+					address = new ServerAddress(host, Integer
+							.parseInt(a[1]));
+				} else {
+					address = new ServerAddress(host);
+				}
+				MONGODB_HOSTS.add(address);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		
 	}
 	
