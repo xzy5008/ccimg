@@ -43,20 +43,14 @@ public class DownloadImage extends HttpServlet {
 		resp.setCharacterEncoding("UTF-8");
 
 		String ccid = req.getParameter("ccid");
-
-		if(StringUtil.isNull(ccid) || (ccid.length() != 11 && ccid.length() != 18)) {
-			resp.getWriter().write("image not exist.");
-			resp.getWriter().flush();
-			resp.getWriter().close();
-			return;
-		}
-		
-		
+		String staticArea =  req.getParameter("staticArea");		// -q 此次彩码生成时是否不需要静止区，0表示需要静止区，1表示不需要
+		String border =  req.getParameter("border");		// -e 此次彩码生成时是否不需要边框，0表示需要，1表示不需要 
+		String lmv =  req.getParameter("lmv");
+		String dpi =  req.getParameter("dpi");
 		
  		try {
-					
  			
- 					String rs = MakeService.makeImg(ccid);
+ 					String rs = MakeService.makeImg(ccid,staticArea,border,lmv,dpi);
  					if("-1".equals(rs)) {
  						resp.getWriter().write("image not exist.");
 						resp.getWriter().flush();

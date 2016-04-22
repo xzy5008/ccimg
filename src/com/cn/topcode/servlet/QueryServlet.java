@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -38,11 +40,32 @@ public class QueryServlet extends HttpServlet {
 		resp.setCharacterEncoding("UTF-8");
 
 		String ccid = req.getParameter("ccid");
+		
+		String staticArea =  req.getParameter("staticArea");		// -q 此次彩码生成时是否不需要静止区，0表示需要静止区，1表示不需要
+		String border =  req.getParameter("border");		// -e 此次彩码生成时是否不需要边框，0表示需要，1表示不需要 
+		String lmv =  req.getParameter("lmv");
+		String dpi =  req.getParameter("dpi");
+		
 		String time = req.getParameter("time");
 		String pwd = req.getParameter("pwd");
-
 		String rs = "0001";// 请求参数错误
-
+		
+		if(StringUtil.isNull(staticArea)){
+			staticArea = "1";
+		}
+		
+		if(StringUtil.isNull(border)){
+			border = "1";
+		}
+		
+		if(StringUtil.isNull(lmv)){
+			lmv = "1";
+		}
+		
+		if(StringUtil.isNull(dpi)){
+			dpi = "600";
+		}
+		
 		try {
 			if (!StringUtil.isNull(ccid) && !StringUtil.isNull(time)
 					&& !StringUtil.isNull(pwd)) {
@@ -52,7 +75,7 @@ public class QueryServlet extends HttpServlet {
 //					
 
 					if(!StringUtil.isNull(ccid) && (ccid.length() == 11 || ccid.length() == 18)) {
-						String sb = MakeService.makeImg(ccid);
+						String sb = MakeService.makeImg(ccid,staticArea,border,lmv,dpi);
 						
 						//查询图片是否存在
 						File file = new File(sb.toString());
@@ -100,5 +123,9 @@ public class QueryServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doPost(req, resp);
 	}
+	
+	
+	
+
 	
 }

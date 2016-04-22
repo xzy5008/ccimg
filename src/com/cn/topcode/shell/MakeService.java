@@ -4,6 +4,8 @@ import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.cn.topcode.util.Config;
 import com.cn.topcode.util.MongoDBUtil;
@@ -25,12 +27,12 @@ public class MakeService {
 	 * @param staticArea -q 此次彩码生成时是否不需要静止区，0表示需要静止区，1表示不需要
 	 * @param border     -e 此次彩码生成时是否不需要边框，0表示需要，1表示不需要 
 	 * @param width		  宽度
-	 * @param sdk		  验证码
+	 * @param sdk		  验证码 
 	 * @param id		  彩码ID
 	 * @param type       -t 此次彩码生成类型，必填 1=5x5,2=5x8
 	 * @return
 	 */
-	public static boolean ExeShell(String shellPath,String imgPath,String sdk,String staticArea,String border,String width,String id,String type,String count) {
+	public static boolean ExeShell(String shellPath,String imgPath,String sdk,String staticArea,String border,int width,String id,String type,String count) {
 		StringBuffer sb = new StringBuffer(shellPath);
 		sb.append(" -q ").append(staticArea);	//静止区
 		sb.append(" -e ").append(border);		//边框
@@ -75,7 +77,7 @@ public class MakeService {
 	}
 	
 	
-	public static String makeImg(String id) {
+	public static String makeImg(String id,String staticArea,String border,String lmv,String dpi) {
 		
 		
 		try {
@@ -89,11 +91,8 @@ public class MakeService {
 			
 			int rs = MongoDBUtil.query(type, Long.parseLong(id));
 			
-			String staticArea = "1";		// -q 此次彩码生成时是否不需要静止区，0表示需要静止区，1表示不需要
-			String border = "0";			// -e 此次彩码生成时是否不需要边框，0表示需要，1表示不需要 
-			String width = "200";			//宽度
+			int width = countPx(lmv, dpi, type);			//宽度
 			String count = "1";
-			
 			if(0 == rs) {
 				ExeShell(Config.MAKE_SHELL, Config.MAKE_IMGPATH, Config.MAKE_SDK, staticArea, border, width, id, mType, count);
 			}else{
@@ -116,6 +115,44 @@ public class MakeService {
 		
 		
 	}
+	
+	//
+	 public static int countPx(String lmv, String dpiv,String typev){
+		 int rs;
+		 try {
+			 	Map<String, String> tp = new HashMap<String, String>();
+			 	tp.put("55", "5");
+			 	tp.put("58", "8");
+				double lm = Double.parseDouble(lmv);
+				double dpi = Double.parseDouble(dpiv);
+				int type = Integer.parseInt(tp.get(typev));
+				
+				rs = (int) ((lm*0.3937)*dpi);
+				int v = 1;
+				while(rs % type != 0) {
+					
+					if((rs+v)%type ==0 ){
+						rs = rs + v;
+						break;
+					}
+					
+					if((rs-v)%type == 0) {
+						rs = rs-v;
+						
+						break;
+					}
+					
+					v++;
+				}
+				
+		} catch (Exception e) {
+			throw new RuntimeException("像素转换异常:"+e);
+		}
+		
+		 
+		 return rs;
+		 
+	 }
 	
 	
 
